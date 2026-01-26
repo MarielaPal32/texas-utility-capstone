@@ -4,16 +4,17 @@ import streamlit as st
 import folium
 from folium.plugins import MarkerCluster
 from streamlit_folium import st_folium
+from pathlib import Path
 
 st.set_page_config(page_title="Texas Utility Prospecting", layout="wide")
 
 st.title("Texas Utility Prospecting & Market Prioritization")
 st.caption("Capstone: priorización de mercado en Texas usando utilities + infraestructura (subestaciones).")
 
-BASE = r"C:\Users\palmi\OneDrive\Escritorio\Bootcamp\texas-utility-capstone"
-RANK_PATH = os.path.join(BASE, "outputs", "texas_priority_zip_ranking.csv")
-PROSPECTS_PATH = os.path.join(BASE, "outputs", "top_prospects_in_top50_zips.csv")
-SUB_PATH = os.path.join(BASE, "data", "raw", "US Electric Power Transmission Substations.csv")
+BASE = Path(__file__).resolve().parents[1]
+RANK_PATH = BASE / "outputs" / "texas_priority_zip_ranking.csv"
+PROSPECTS_PATH = BASE / "outputs" / "top_prospects_in_top50_zips.csv"
+SUB_PATH = BASE / "data" / "processed" / "substations_tx.csv"
 
 df_rank = pd.read_csv(RANK_PATH)
 
@@ -127,3 +128,4 @@ Priorizar dónde enfocar prospecting de utilities/co-ops en Texas, usando datos 
 - Score = 0.4 * utilities_norm + 0.6 * substations_norm
         """
     )
+
