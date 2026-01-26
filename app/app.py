@@ -79,12 +79,19 @@ with tab3:
     st.subheader("Mapa (infraestructura en ZIPs top)")
     st.caption("Mostramos subestaciones dentro de ZIPs prioritarios como proxy visual de infraestructura.")
 
-    df_sub = pd.read_csv(SUB_PATH)
-    df_sub = df_sub[df_sub["STATE"].astype(str).str.upper().str.strip() == "TX"].copy()
-    df_sub["ZIP"] = df_sub["ZIP"].astype(str).str.extract(r"(\d+)", expand=False).str.zfill(5)
+    st.write("Buscando archivo en:", str(SUB_PATH))
+
+    if not os.path.exists(SUB_PATH):
+        st.error("❌ No encuentro el archivo substations_tx.csv en el repo.")
+        st.write("Revisá que exista: data/processed/substations_tx.csv")
+        st.stop()
+
+    df_sub = pd.read_csv(SUB_PATH, low_memory=False)
 
     # ZIPs top según filtros actuales
     top_zips_now = df_f.head(top_n)["zip"].astype(str).tolist()
+
+    df_sub["ZIP"] = df_sub["ZIP"].astype(str).str.extract(r"(\d+)", expand=False).str.zfill(5)
     df_map = df_sub[df_sub["ZIP"].isin(top_zips_now)].copy()
 
     df_map["LATITUDE"] = pd.to_numeric(df_map["LATITUDE"], errors="coerce")
@@ -93,7 +100,6 @@ with tab3:
 
     st.write(f"Subestaciones en ZIPs top: {len(df_map):,}")
 
-    # sample para performance
     sample_n = min(len(df_map), 2000)
     df_s = df_map.sample(sample_n, random_state=42) if sample_n > 0 else df_map
 
@@ -128,4 +134,5 @@ Priorizar dónde enfocar prospecting de utilities/co-ops en Texas, usando datos 
 - Score = 0.4 * utilities_norm + 0.6 * substations_norm
         """
     )
+
 
