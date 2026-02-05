@@ -133,18 +133,13 @@ Priorizar dónde enfocar prospecting de utilities/co-ops en Texas, usando datos 
 - Normalizamos `n_utilities` y `n_substations` (min-max).
 - Score = 0.4 * utilities_norm + 0.6 * substations_norm
         """
-import os
-st.subheader("Metodología")
-with st.expander("🧠 Glosario"):
-    try:
-        with open("docs/glosario.md", "r", encoding="utf-8") as f:
-            st.markdown(f.read())
-    except:
-        st.warning("No se pudo cargar el glosario.")
     )
 
-
-
-
+    with st.expander("🧠 Glosario"):
+        try:
+            with open("docs/glosario.md", "r", encoding="utf-8") as f:
+                st.markdown(f.read())
+        except FileNotFoundError:
+            st.warning("No se encontró docs/glosario.md. Verificá que esté subido al repo.")
 
 
